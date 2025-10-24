@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tizen Video Telemetry Tracker</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Tizen Video Telemetry Tracker</h1>
+            <p>Samsung Smart TV - Video Playback Analytics</p>
+        </div>
+
+        <!-- Video Player -->
+        <div class="video-container">
+            <video 
+                id="myVideoPlayer" 
+                width="1280" 
+                height="720" 
+                controls
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Status Cards -->
+        <div class="cards-grid">
+            <!-- Status Card -->
+            <div class="card">
+                <div class="card-title">Status</div>
+                <div class="card-value" id="statusValue">⏸️ Paused</div>
+            </div>
+
+            <!-- Events Count Card -->
+            <div class="card">
+                <div class="card-title">Events Tracked</div>
+                <div class="card-value" id="eventsCount">0</div>
+            </div>
+
+            <!-- Milestones Card -->
+            <div class="card">
+                <div class="card-title">Milestones</div>
+                <div class="milestones">
+                    <span class="milestone" id="milestone25">25%</span>
+                    <span class="milestone" id="milestone50">50%</span>
+                    <span class="milestone" id="milestone75">75%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Log -->
+        <div class="log-container">
+            <div class="log-title">📊 Telemetry Event Log</div>
+            <div class="log-content" id="logContent">
+                <div class="log-empty">No events tracked yet. Start playing the video!</div>
+            </div>
+        </div>
+
+        <!-- Event Reference -->
+        <div class="reference">
+            <div class="reference-title">Tracked Events</div>
+            <div class="events-grid">
+                <div class="event-item">
+                    <div class="event-name">play_start / unpaused</div>
+                    <div class="event-desc">Playback started or resumed</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">pause</div>
+                    <div class="event-desc">Playback paused</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">complete</div>
+                    <div class="event-desc">Video reached the end</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">quarter_play / half_play</div>
+                    <div class="event-desc">25%, 50%, 75% milestones</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">playback_failure</div>
+                    <div class="event-desc">Error during loading or playback</div>
+                </div>
+                <div class="event-item">
+                    <div class="event-name">seek_start / seek_end</div>
+                    <div class="event-desc">User seeking to new position</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
