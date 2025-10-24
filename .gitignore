@@ -1,0 +1,87 @@
+# =========================================
+# Tizen TV Web App .gitignore
+# =========================================
+
+.sign/
+
+# Build and package artifacts
+.project
+.buildResult/
+.output/
+.profile
+.settings/
+.DS_Store
+Thumbs.db
+
+# Tizen IDE / Studio specific
+.tproject
+.tizen/
+.metadata/
+bin/
+lib/
+tmp/
+deploy/
+res/.tproject
+res/.settings
+res/.metadata
+res/.buildResult
+
+# Compiled JavaScript / Transpiled code
+dist/
+build/
+bundle/
+*.map
+
+# Node.js dependencies (if using npm/yarn)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+pnpm-lock.yaml
+
+# Logs
+*.log
+logs/
+log.txt
+
+# OS-specific files
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# IDE and editor settings
+.vscode/
+.idea/
+*.iml
+
+# Temporary or cache files
+.cache/
+coverage/
+*.swp
+*.swo
+*.bak
+*.tmp
+*.temp
+*.old
+
+# Environment and secret files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Web build tools
+.sass-cache/
+bower_components/
+jspm_packages/
+
+# Screenshots, test output
+screenshots/
+test-output/
+reports/
+
+# =========================================
+# End of file
+# =========================================

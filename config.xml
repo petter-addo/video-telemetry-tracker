@@ -6,4 +6,6 @@
     <icon src="icon.png"/>
     <name>Video Telemetry Tracker</name>
     <tizen:profile name="tizen"/>
+    <access origin="*" subdomains="true"/>
+    <tizen:privilege name="http://tizen.org/privilege/internet"/>
 </widget>
