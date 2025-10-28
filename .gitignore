@@ -21,6 +21,8 @@ bin/
 lib/
 tmp/
 deploy/
+debug/
+release/
 res/.tproject
 res/.settings
 res/.metadata
@@ -72,6 +74,10 @@ coverage/
 .env.production
 .env.test
 
+# HTML files with credentials (use index.html.template instead)
+# Uncomment the line below if you want to prevent committing credentials in index.html
+# index.html
+
 # Web build tools
 .sass-cache/
 bower_components/
@@ -81,6 +87,8 @@ jspm_packages/
 screenshots/
 test-output/
 reports/
+
+Debug/
 
 # =========================================
 # End of file

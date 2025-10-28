@@ -16,20 +16,14 @@
     <link rel="stylesheet" href="css/style.css">
     
     <!-- New Relic Browser Agent -->
-    <!-- IMPORTANT: Run 'npm run update-html' to inject your credentials from .env -->
-    <!-- Get credentials from: https://one.newrelic.com/launcher/nr1-core.settings -->
-    <!-- Note: May not work on Tizen emulator, but will work on real devices -->
+    <!-- IMPORTANT: Replace XXXXXXX placeholders with your actual New Relic credentials -->
+    <!-- Get your Browser Agent script from: https://one.newrelic.com/launcher/nr1-core.settings -->
+    <!-- OR run: ./update-credentials.ps1 (Windows) or ./update-credentials.sh (Linux/Mac) -->
     <script type="text/javascript">
-        try {
-            // DO NOT COMMIT REAL CREDENTIALS HERE
-            // Use .env file and run update-credentials script instead
-            ;window.NREUM||(NREUM={});NREUM.loader_config={accountID:"",trustKey:"",agentID:"",licenseKey:"",applicationID:""};
-            NREUM.info={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",licenseKey:"",applicationID:"",sa:1};
-        } catch(e) {
-            console.log('New Relic config failed (expected on Tizen emulator)');
-        }
+        ;window.NREUM||(NREUM={});NREUM.loader_config={accountID:"XXXXXXX",trustKey:"XXXXXXX",agentID:"XXXXXXXXX",licenseKey:"NRBR-XXXXXXXXXXXXXXXXXXXX",applicationID:"XXXXXXXXX"};
+        NREUM.info={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",licenseKey:"NRBR-XXXXXXXXXXXXXXXXXXXX",applicationID:"XXXXXXXXX",sa:1};
     </script>
-    <script src="https://js-agent.newrelic.com/nr-loader-spa-1.264.0.min.js" onerror="console.log('New Relic agent failed to load (expected on Tizen emulator)')"></script>
+    <script src="https://js-agent.newrelic.com/nr-loader-spa-1.264.0.min.js"></script>
     
 </head>
 <body>
@@ -52,12 +46,6 @@
                 <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
-
-            <!-- Click-to-start overlay for TVs/emulators where autoplay is blocked -->
-            <div class="video-overlay" id="playOverlay" role="button" aria-label="Start video">
-                <button id="btnStartPlayback" class="play-btn" type="button">▶ Start Video</button>
-                <div class="hint">Click to start. Use bottom area to seek.</div>
-            </div>
         </div>
 
         <!-- Status Cards -->
@@ -92,7 +80,7 @@
                 <div class="log-empty">No events tracked yet. Start playing the video!</div>
             </div>
         </div>
-
+        
     </div>
 
     <script src="js/main.js"></script>
