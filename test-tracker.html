@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tizen Tracker Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: #0f0; font-size: 32px; }
+        video { width: 100%; max-width: 800px; background: #000; margin: 20px 0; }
+        .log {
+            background: #222;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .log-entry { padding: 5px 0; border-bottom: 1px solid #444; }
+        .success { color: #0f0; }
+        .error { color: #f00; }
+        .info { color: #0ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Tizen Tracker Library Test</h1>
+        <p>Testing New Relic video tracker on Tizen</p>
+
+        <video 
+            id="testVideo"
+            controls
+            preload="auto"
+            playsinline
+            webkit-playsinline>
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny_320x180.mp4" type="video/mp4">
+        </video>
+
+        <div class="log" id="debugLog"></div>
+    </div>
+
+    <!-- Load the compiled tracker -->
+    <script src="js/main.js"></script>
+
+    <script>
+        var logDiv = document.getElementById('debugLog');
+        var eventCount = 0;
+
+        function log(message, type) {
+            type = type || 'info';
+            eventCount++;
+            var entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            var timestamp = new Date().toLocaleTimeString();
+            entry.innerHTML = '[' + eventCount + '] [' + timestamp + '] ' + message;
+            logDiv.insertBefore(entry, logDiv.firstChild);
+        }
+
+        // Check if tracker loaded
+        setTimeout(function() {
+            log('🌐 User Agent: ' + navigator.userAgent, 'info');
+            log('📺 Tizen: ' + (typeof tizen !== 'undefined'), 'info');
+            log('📊 New Relic: ' + (typeof newrelic !== 'undefined' || typeof NREUM !== 'undefined'), 'info');
+            log('🎬 Video Tracker loaded: ' + (typeof window.tracker !== 'undefined'), 'info');
+            
+            if (typeof window.tracker !== 'undefined' && window.tracker) {
+                log('✅ Tracker initialized successfully!', 'success');
+            } else {
+                log('⚠️ Tracker not initialized (may be normal on Tizen)', 'info');
+            }
+        }, 1000);
+
+        // Tizen back button
+        document.addEventListener('tizenhwkey', function(e) {
+            if (e.keyName === 'back') {
+                try {
+                    tizen.application.getCurrentApplication().exit();
+                } catch (err) {}
+            }
+        });
+    </script>
+</body>
+</html>

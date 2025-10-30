@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tizen Video Telemetry Tracker</title>
+    <script>
+        (function detectTizenEarly() {
+            try {
+                if (typeof tizen !== 'undefined' || (navigator && /Tizen|SMART-TV|SMARTTV|Web0S/i.test(navigator.userAgent))) {
+                    document.documentElement.classList.add('tizen');
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- New Relic Browser Agent -->
+    <!-- IMPORTANT: Replace XXXXXXX placeholders with your actual New Relic credentials -->
+    <!-- Get your Browser Agent script from: https://one.newrelic.com/launcher/nr1-core.settings -->
+    <!-- OR run: ./update-credentials.ps1 (Windows) or ./update-credentials.sh (Linux/Mac) -->
+    <script type="text/javascript">
+        ;window.NREUM||(NREUM={});NREUM.loader_config={accountID:"XXXXXXX",trustKey:"XXXXXXX",agentID:"XXXXXXXXX",licenseKey:"NRBR-XXXXXXXXXXXXXXXXXXXX",applicationID:"XXXXXXXXX"};
+        NREUM.info={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",licenseKey:"NRBR-XXXXXXXXXXXXXXXXXXXX",applicationID:"XXXXXXXXX",sa:1};
+    </script>
+    <script src="https://js-agent.newrelic.com/nr-loader-spa-1.264.0.min.js"></script>
+    
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Tizen Video Telemetry Tracker</h1>
+            <p>Samsung Smart TV - Video Playback Analytics</p>
+        </div>
+
+        <!-- Video Player -->
+        <div class="video-container">
+            <video
+                id="myVideoPlayer"
+                controls
+                preload="auto"
+                playsinline
+                webkit-playsinline
+                poster="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Status Cards -->
+        <div class="cards-grid">
+            <!-- Status Card -->
+            <div class="card">
+                <div class="card-title">Status</div>
+                <div class="card-value" id="statusValue">⏸️ Paused</div>
+            </div>
+
+            <!-- Events Count Card -->
+            <div class="card">
+                <div class="card-title">Events Tracked</div>
+                <div class="card-value" id="eventsCount">0</div>
+            </div>
+
+            <!-- Milestones Card -->
+            <div class="card">
+                <div class="card-title">Milestones</div>
+                <div class="milestones">
+                    <span class="milestone" id="milestone25">25%</span>
+                    <span class="milestone" id="milestone50">50%</span>
+                    <span class="milestone" id="milestone75">75%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Log -->
+        <div class="log-container">
+            <div class="log-title">📊 Telemetry Event Log</div>
+            <div class="log-content" id="logContent">
+                <div class="log-empty">No events tracked yet. Start playing the video!</div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

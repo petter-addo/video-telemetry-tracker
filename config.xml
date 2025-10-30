@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns:tizen="http://tizen.org/ns/widgets" xmlns="http://www.w3.org/ns/widgets" id="http://yourdomain/BasicUI" version="1.0.0" viewmodes="maximized">
-    <tizen:application id="JzeJ2WpRqN.VideoTelemetryTracker" package="JzeJ2WpRqN" required_version="9.0"/>
+    <tizen:application id="JzeJ2WpRqN.VideoTelemetryTracker" package="JzeJ2WpRqN" required_version="6.0"/>
     <content src="index.html"/>
+    <author>Peter Addo</author>
     <feature name="http://tizen.org/feature/screen.size.all"/>
     <icon src="icon.png"/>
     <name>Video Telemetry Tracker</name>
-    <tizen:profile name="tizen"/>
-    <access origin="*" subdomains="true"/>
+    <tizen:profile name="tv"/>
+    <tizen:setting screen-orientation="landscape" context-menu="enable" background-support="disable" encryption="disable" install-location="auto" hwkey-event="enable"/>
+    
+    <!-- Privileges -->
     <tizen:privilege name="http://tizen.org/privilege/internet"/>
+    <tizen:privilege name="http://tizen.org/privilege/network.public"/>
+    <tizen:privilege name="http://tizen.org/privilege/tv.audio"/>
+    <tizen:privilege name="http://tizen.org/privilege/tv.display"/>
+    <tizen:privilege name="http://tizen.org/privilege/tv.window"/>
+    <tizen:privilege name="http://tizen.org/privilege/tv.inputdevice"/>
+    <tizen:privilege name="http://tizen.org/privilege/mediacapture"/>
+    <tizen:privilege name="http://tizen.org/privilege/multimedia"/>
+    <tizen:privilege name="http://tizen.org/privilege/volume.set"/>
+    <tizen:privilege name="http://tizen.org/privilege/externalstorage"/>
+    <tizen:privilege name="http://tizen.org/privilege/externalstorage.appdata"/>
+    
+    <!-- Allow external content -->
+    <access origin="*" subdomains="true"/>
 </widget>

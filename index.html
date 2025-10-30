@@ -4,7 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tizen Video Telemetry Tracker</title>
+    <script>
+        (function detectTizenEarly() {
+            try {
+                if (typeof tizen !== 'undefined' || (navigator && /Tizen|SMART-TV|SMARTTV|Web0S/i.test(navigator.userAgent))) {
+                    document.documentElement.classList.add('tizen');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <link rel="stylesheet" href="css/style.css">
+    
+    <!-- New Relic Browser Agent -->
+    <!-- IMPORTANT: Run 'npm run update-html' to inject your credentials from .env -->
+    <!-- Get credentials from: https://one.newrelic.com/launcher/nr1-core.settings -->
+    <!-- Note: May not work on Tizen emulator, but will work on real devices -->
+    <script type="text/javascript">
+        try {
+            // DO NOT COMMIT REAL CREDENTIALS HERE
+            // Use .env file and run update-credentials script instead
+            ;window.NREUM||(NREUM={});NREUM.loader_config={accountID:"",trustKey:"",agentID:"",licenseKey:"",applicationID:""};
+            NREUM.info={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",licenseKey:"",applicationID:"",sa:1};
+        } catch(e) {
+            console.log('New Relic config failed (expected on Tizen emulator)');
+        }
+    </script>
+    <script src="https://js-agent.newrelic.com/nr-loader-spa-1.264.0.min.js" onerror="console.log('New Relic agent failed to load (expected on Tizen emulator)')"></script>
+    
+    <!-- Tizen Web APIs - Required for AVPlay on Tizen TV/Emulator -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    
+    <!-- Wait for webapis to load before initializing app -->
+    <script type="text/javascript">
+        // Ensure webapis is loaded before running main script
+        window.webapisReady = false;
+        
+        // Poll for webapis.avplay availability
+        function checkWebapisReady() {
+            console.log('🔍 Polling for webapis.avplay...');
+            console.log('  typeof webapis:', typeof webapis);
+            console.log('  typeof window.webapis:', typeof window.webapis);
+            
+            if (typeof webapis !== 'undefined' && typeof webapis.avplay !== 'undefined') {
+                console.log('✅ webapis.avplay is available!');
+                console.log('  webapis.avplay methods:', Object.keys(webapis.avplay).slice(0, 10).join(', '));
+                window.webapisReady = true;
+                window.dispatchEvent(new Event('webapisready'));
+                return true;
+            } else {
+                console.log('⏳ webapis.avplay not ready yet, will retry...');
+                return false;
+            }
+        }
+        
+        // Start checking immediately
+        var checkInterval = setInterval(function() {
+            if (checkWebapisReady()) {
+                clearInterval(checkInterval);
+            }
+        }, 50); // Check every 50ms
+        
+        // Also check on load event
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                if (!window.webapisReady) {
+                    console.log('⚠️ Load event: webapis still not ready');
+                    checkWebapisReady();
+                }
+            }, 200);
+        });
+        
+        // Timeout after 5 seconds
+        setTimeout(function() {
+            clearInterval(checkInterval);
+            if (!window.webapisReady) {
+                console.warn('⚠️ webapis.avplay failed to load after 5 seconds');
+                console.warn('⚠️ Will proceed with mock AVPlay');
+                window.webapisReady = true;
+                window.dispatchEvent(new Event('webapisready'));
+            }
+        }, 5000);
+    </script>
+    
 </head>
 <body>
     <div class="container">
@@ -14,16 +95,25 @@
             <p>Samsung Smart TV - Video Playback Analytics</p>
         </div>
 
-        <!-- Video Player -->
+        <!-- Video Player - AVPlay renders directly (no HTML element needed) -->
         <div class="video-container">
-            <video 
-                id="myVideoPlayer" 
-                width="1280" 
-                height="720" 
-                controls
-                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4">
-                Your browser does not support the video tag.
-            </video>
+            <!-- Network status bullet (green = online, grey = offline) -->
+            <div id="netStatusDot" class="net-dot net-dot--offline" title="Network: offline"></div>
+            <div id="netStatusLabel" class="net-label">Offline</div>
+            <!-- AVPlay renders video directly to the screen area defined by setDisplayRect() -->
+            <!-- No <object> or <video> element needed for Tizen AVPlay -->
+
+            <!-- Simple play button overlay -->
+            <div id="playOverlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;">
+                <button id="btnStartPlayback" style="font-size: 48px; background: rgba(0,0,0,0.7); color: white; border: 2px solid white; border-radius: 50%; width: 100px; height: 100px; cursor: pointer;">▶</button>
+            </div>
+
+            <!-- Browser testing indicator (hidden on Tizen) -->
+            <div id="mockIndicator" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: #fff; padding: 20px; border-radius: 8px; text-align: center; display: none; z-index: 1;">
+                <h2>⚠️ Browser Testing Mode</h2>
+                <p>Using mock AVPlay API</p>
+                <p style="font-size: 14px; opacity: 0.7;">No video will display. Check console for mock events.</p>
+            </div>
         </div>
 
         <!-- Status Cards -->
@@ -59,36 +149,6 @@
             </div>
         </div>
 
-        <!-- Event Reference -->
-        <div class="reference">
-            <div class="reference-title">Tracked Events</div>
-            <div class="events-grid">
-                <div class="event-item">
-                    <div class="event-name">play_start / unpaused</div>
-                    <div class="event-desc">Playback started or resumed</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-name">pause</div>
-                    <div class="event-desc">Playback paused</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-name">complete</div>
-                    <div class="event-desc">Video reached the end</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-name">quarter_play / half_play</div>
-                    <div class="event-desc">25%, 50%, 75% milestones</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-name">playback_failure</div>
-                    <div class="event-desc">Error during loading or playback</div>
-                </div>
-                <div class="event-item">
-                    <div class="event-name">seek_start / seek_end</div>
-                    <div class="event-desc">User seeking to new position</div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script src="js/main.js"></script>

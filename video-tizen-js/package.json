@@ -1,0 +1,50 @@
+{
+  "name": "video-tizen-js",
+  "version": "1.0.0",
+  "description": "Tizen AVPlay video analytics tracker for New Relic - replicate HTML5 tracker functionality using Samsung Tizen webapis.avplay",
+  "main": "src/avplay-tracker.js",
+  "module": "src/avplay-tracker.js",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/tracker.test.js",
+    "build": "echo 'No build needed - ES6 modules ready to use'",
+    "lint": "eslint src/**/*.js"
+  },
+  "keywords": [
+    "tizen",
+    "samsung",
+    "smart-tv",
+    "avplay",
+    "video",
+    "analytics",
+    "new-relic",
+    "telemetry",
+    "tracker",
+    "monitoring"
+  ],
+  "author": "Peter Addo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/petter-addo/video-telemetry-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/petter-addo/video-telemetry-tracker/issues"
+  },
+  "homepage": "https://github.com/petter-addo/video-telemetry-tracker#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "src/",
+    "examples/",
+    "README.md",
+    "DATAMODEL.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "eslint": "^8.0.0"
+  },
+  "peerDependencies": {},
+  "dependencies": {}
+}

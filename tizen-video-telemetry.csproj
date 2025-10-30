@@ -1,0 +1,25 @@
+﻿<Project Sdk="Tizen.NET.Sdk/1.2.0">
+
+  <!-- Property Group for Tizen Project -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+      <AssemblyName>tizen-video-telemetry</AssemblyName>
+      <TargetFramework>tizen12.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>None</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ProjectTypeGuids>{8E00536E-BD0D-4447-B307-F2C80A762AD0}</ProjectTypeGuids>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <WebProject>true</WebProject>
+  </PropertyGroup>
+
+</Project>

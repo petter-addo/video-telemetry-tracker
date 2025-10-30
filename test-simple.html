@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tizen Video Test - Simple</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #0f0;
+            font-size: 32px;
+        }
+        video {
+            width: 100%;
+            max-width: 800px;
+            background: #000;
+            margin: 20px 0;
+        }
+        .log {
+            background: #222;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid #444;
+        }
+        .success { color: #0f0; }
+        .error { color: #f00; }
+        .info { color: #0ff; }
+        .debug { color: #ff0; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Tizen TV Debug Test</h1>
+        <p>Simple video player test - No external dependencies</p>
+
+        <div>
+            <button onclick="testVideo()">▶️ Test Play</button>
+            <button onclick="testPause()">⏸️ Test Pause</button>
+            <button onclick="testSeek()">⏩ Seek to 10s</button>
+            <button onclick="clearLog()">🗑️ Clear Log</button>
+        </div>
+
+        <video 
+            id="testVideo"
+            controls
+            preload="auto"
+            playsinline
+            webkit-playsinline>
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny_320x180.mp4" type="video/mp4">
+        </video>
+
+        <div class="log" id="debugLog"></div>
+    </div>
+
+    <script>
+        var video = document.getElementById('testVideo');
+        var logDiv = document.getElementById('debugLog');
+        var eventCount = 0;
+
+        function log(message, type) {
+            type = type || 'info';
+            eventCount++;
+            var entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            var timestamp = new Date().toLocaleTimeString();
+            entry.innerHTML = '[' + eventCount + '] [' + timestamp + '] ' + message;
+            logDiv.insertBefore(entry, logDiv.firstChild);
+        }
+
+        function clearLog() {
+            logDiv.innerHTML = '';
+            eventCount = 0;
+        }
+
+        function testVideo() {
+            video.play().then(function() {
+                log('✅ Video.play() succeeded', 'success');
+            }).catch(function(err) {
+                log('❌ Video.play() failed: ' + err.message, 'error');
+            });
+        }
+
+        function testPause() {
+            video.pause();
+            log('⏸️ Video.pause() called', 'info');
+        }
+
+        function testSeek() {
+            video.currentTime = 10;
+            log('⏩ Seeked to 10 seconds', 'info');
+        }
+
+        // Environment detection
+        log('🌐 User Agent: ' + navigator.userAgent, 'debug');
+        log('📺 Tizen detected: ' + (typeof tizen !== 'undefined'), 'debug');
+        log('🎬 Video element: ' + (video ? 'Found' : 'Not found'), 'debug');
+
+        // Video event listeners
+        video.addEventListener('loadstart', function() {
+            log('📥 loadstart', 'info');
+        });
+
+        video.addEventListener('loadedmetadata', function() {
+            log('📊 loadedmetadata - Duration: ' + video.duration + 's, Size: ' + video.videoWidth + 'x' + video.videoHeight, 'success');
+        });
+
+        video.addEventListener('loadeddata', function() {
+            log('✅ loadeddata', 'success');
+        });
+
+        video.addEventListener('canplay', function() {
+            log('✅ canplay - Ready to play', 'success');
+        });
+
+        video.addEventListener('play', function() {
+            log('▶️ play event - Position: ' + video.currentTime.toFixed(2) + 's', 'success');
+        });
+
+        video.addEventListener('playing', function() {
+            log('▶️ playing event', 'success');
+        });
+
+        video.addEventListener('pause', function() {
+            log('⏸️ pause event - Position: ' + video.currentTime.toFixed(2) + 's', 'info');
+        });
+
+        video.addEventListener('ended', function() {
+            log('🏁 ended event - Video completed', 'success');
+        });
+
+        video.addEventListener('timeupdate', function() {
+            // Log every 5 seconds to avoid spam
+            if (Math.floor(video.currentTime) % 5 === 0 && video.currentTime > 0) {
+                log('⏱️ timeupdate - Position: ' + video.currentTime.toFixed(2) + 's / ' + video.duration.toFixed(2) + 's', 'debug');
+            }
+        });
+
+        video.addEventListener('seeking', function() {
+            log('🔍 seeking - Target: ' + video.currentTime.toFixed(2) + 's', 'info');
+        });
+
+        video.addEventListener('seeked', function() {
+            log('✅ seeked - New position: ' + video.currentTime.toFixed(2) + 's', 'success');
+        });
+
+        video.addEventListener('waiting', function() {
+            log('⏳ waiting - Buffering...', 'info');
+        });
+
+        video.addEventListener('error', function(e) {
+            var errorMsg = 'Unknown error';
+            if (video.error) {
+                errorMsg = 'Code: ' + video.error.code + ', Message: ' + video.error.message;
+            }
+            log('❌ ERROR: ' + errorMsg, 'error');
+        });
+
+        video.addEventListener('stalled', function() {
+            log('⚠️ stalled - Network stalled', 'error');
+        });
+
+        video.addEventListener('suspend', function() {
+            log('⏸️ suspend - Download suspended', 'info');
+        });
+
+        video.addEventListener('volumechange', function() {
+            log('🔊 volumechange - Volume: ' + (video.volume * 100).toFixed(0) + '%, Muted: ' + video.muted, 'info');
+        });
+
+        // Tizen back button handler
+        document.addEventListener('tizenhwkey', function(e) {
+            if (e.keyName === 'back') {
+                log('⬅️ Back button pressed', 'info');
+                try {
+                    tizen.application.getCurrentApplication().exit();
+                } catch (err) {
+                    log('❌ Exit failed: ' + err.message, 'error');
+                }
+            }
+        });
+
+        log('🚀 Test page initialized', 'success');
+        log('📺 Video source: ' + video.currentSrc, 'info');
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tizen WebAPIs Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #dcdcdc; }
+        .pass { color: #4ec9b0; }
+        .fail { color: #f48771; }
+        .info { color: #569cd6; }
+        pre { background: #252526; padding: 10px; border-left: 3px solid #007acc; }
+    </style>
+</head>
+<body>
+    <h1>Tizen WebAPIs Diagnostic Test</h1>
+    <div id="output"></div>
+    
+    <!-- Load Tizen WebAPIs -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    
+    <script>
+        var output = document.getElementById('output');
+        
+        function log(msg, type) {
+            var div = document.createElement('div');
+            div.className = type || 'info';
+            div.textContent = msg;
+            output.appendChild(div);
+            console.log(msg);
+        }
+        
+        function test() {
+            log('=== Tizen WebAPIs Diagnostic ===', 'info');
+            log('');
+            
+            // Test 1: Check if running on Tizen
+            log('1. Platform Check:', 'info');
+            log('  User Agent: ' + navigator.userAgent);
+            log('  typeof tizen: ' + typeof tizen, typeof tizen !== 'undefined' ? 'pass' : 'fail');
+            log('');
+            
+            // Test 2: Check webapis
+            log('2. WebAPIs Check:', 'info');
+            log('  typeof webapis: ' + typeof webapis, typeof webapis !== 'undefined' ? 'pass' : 'fail');
+            log('  typeof window.webapis: ' + typeof window.webapis);
+            log('');
+            
+            // Test 3: Check webapis.avplay
+            log('3. AVPlay Check:', 'info');
+            if (typeof webapis !== 'undefined') {
+                log('  typeof webapis.avplay: ' + typeof webapis.avplay, typeof webapis.avplay !== 'undefined' ? 'pass' : 'fail');
+                
+                if (typeof webapis.avplay !== 'undefined') {
+                    log('  ✅ webapis.avplay is available!', 'pass');
+                    log('');
+                    log('  Available methods:', 'info');
+                    var methods = Object.keys(webapis.avplay);
+                    methods.forEach(function(method) {
+                        log('    - ' + method);
+                    });
+                    
+                    // Test 4: Try to get AVPlay state
+                    log('');
+                    log('4. AVPlay State Test:', 'info');
+                    try {
+                        var state = webapis.avplay.getState();
+                        log('  Current state: ' + state, 'pass');
+                    } catch (e) {
+                        log('  State query failed: ' + e.message, 'fail');
+                    }
+                } else {
+                    log('  ❌ webapis.avplay is NOT available!', 'fail');
+                    log('  This means either:', 'fail');
+                    log('    - Not running on Tizen TV/Emulator', 'fail');
+                    log('    - WebAPIs script failed to load', 'fail');
+                    log('    - Missing privileges in config.xml', 'fail');
+                }
+            } else {
+                log('  ❌ webapis is NOT defined at all!', 'fail');
+                log('  $WEBAPIS script likely failed to load', 'fail');
+            }
+            
+            log('');
+            log('=== Test Complete ===', 'info');
+        }
+        
+        // Run test after a delay to ensure script loads
+        setTimeout(function() {
+            log('⏳ Running test in 500ms...', 'info');
+            log('');
+        }, 100);
+        
+        setTimeout(test, 500);
+        
+        // Also run on load
+        window.addEventListener('load', function() {
+            log('');
+            log('--- Running test again after window load ---', 'info');
+            log('');
+            setTimeout(test, 100);
+        });
+    </script>
+</body>
+</html>
